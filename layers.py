@@ -8,6 +8,7 @@ class HiddenLayer:
         self.biases = np.zeros((1, output_size))
 
     def forward(self, x):
+        # we multiply the x matrix and weights matrix and add bias vector
         self.input = x
         self.output = np.dot(x, self.weights) + self.biases
         return self.output
@@ -33,3 +34,10 @@ class ReLU:
 
     def backward(self, output_gradient, learning_rate):
         return output_gradient * (self.input > 0)
+
+class Softmax:
+    def forward(self, x):
+        # we subtract max for stability so that our exponent doesn't go to infinity and since we subtract it from every value it doesn't interupt the results
+        exp_shifted = np.exp(x - np.max(x, axis=1, keepdims=True))
+        self.output = exp_shifted / np.sum(exp_shifted, axis=1, keepdims=True)
+        return self.output
